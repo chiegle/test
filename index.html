@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Roulette des Photos</title>
+    <style>
+        /* Design festif et responsive */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 { color: #ff4757; font-size: 1.5rem; margin-bottom: 20px; }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: white;
+            padding: 15px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        img {
+            width: 100%;
+            border-radius: 15px;
+            display: block;
+            margin-bottom: 20px;
+            /* Animation d'apparition douce */
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        button {
+            background-color: #ff4757;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            font-weight: bold;
+        }
+
+        button:active { transform: scale(0.95); }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>📸 C'est moi la mariée 😀</h1>
+        
+        <img id="photo-display" src="" alt="Chargement...">
+
+        <br>
+        <button onclick="afficherPhotoAleatoire()">Encore une ! 🎲</button>
+    </div>
+
+    <script>
+        // --- CONFIGURATION : METS TES LIENS ICI ---
+        const mesPhotos = [
+            "https://ton-site.com/photos/photo1.jpg",
+            "https://ton-site.com/photos/photo2.jpg",
+            "https://ton-site.com/photos/photo3.jpg",
+            "https://ton-site.com/photos/photo4.jpg"
+            // Ajoute autant de lignes que tu veux !
+        ];
+
+        function afficherPhotoAleatoire() {
+            const imgElement = document.getElementById('photo-display');
+            
+            // On choisit un index au hasard
+            const indexAleatoire = Math.floor(Math.random() * mesPhotos.length);
+            
+            // On met à jour la source de l'image
+            imgElement.src = mesPhotos[indexAleatoire];
+        }
+
+        // On lance une première photo au chargement de la page
+        window.onload = afficherPhotoAleatoire;
+    </script>
+
+</body>
+</html>
