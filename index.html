@@ -80,24 +80,31 @@
     </div>
 
     <script>
-    const nombreDePhotos = 2; // MODIFIE ICI : le nombre total de tes photos
-    const mesPhotos = [];
+        // --- CONFIGURATION ---
+        const nombreDePhotos = 5; // MODIFIE ICI : mets ton nombre total de photos
+        const dossier = "photos/"; // Ton dossier sur GitHub
+        const extension = ".jpg";   // Vérifie bien si c'est .jpg ou .JPG
+        
+        const mesPhotos = [];
 
-    // On remplit la liste automatiquement de 1 à 50
-    for (let i = 1; i <= nombreDePhotos; i++) {
-        // Attention : vérifie bien si c'est .jpg ou .JPG sur GitHub !
-        mesPhotos.push(i + ".jpg"); 
-    }
+        // On remplit la liste de photos/1.jpg à photos/50.jpg
+        for (let i = 1; i <= nombreDePhotos; i++) {
+            mesPhotos.push(dossier + i + extension);
+        }
 
-    function afficherPhotoAleatoire() {
-        const imgElement = document.getElementById('photo-display');
-        const indexAleatoire = Math.floor(Math.random() * mesPhotos.length);
-        imgElement.src = mesPhotos[indexAleatoire];
-    }
+        function afficherPhotoAleatoire() {
+            const imgElement = document.getElementById('photo-display');
+            const indexAleatoire = Math.floor(Math.random() * mesPhotos.length);
+            
+            // On ajoute un petit paramètre "?t=" pour forcer le navigateur à 
+            // recharger l'image si on tombe deux fois sur la même de suite
+            imgElement.src = mesPhotos[indexAleatoire] + "?t=" + new Date().getTime();
+        }
 
-    window.onload = afficherPhotoAleatoire;
-</script>
+        window.onload = afficherPhotoAleatoire;
+    </script>
 
 </body>
 </html>
+
 
