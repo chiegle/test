@@ -5,42 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>La Roulette des Photos</title>
     <style>
-        /* Design festif et responsive */
+        /* Design festif et optimisé pour mobile */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f2f5;
+            background-color: #1a1a1a; /* Fond sombre pour faire ressortir les photos */
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
             margin: 0;
-            padding: 20px;
+            padding: 10px; /* Moins de padding pour gagner de la place */
             text-align: center;
+            color: white;
         }
 
-        h1 { color: #ff4757; font-size: 1.5rem; margin-bottom: 20px; }
+        h1 { 
+            color: #ff4757; 
+            font-size: 1.4rem; 
+            margin-bottom: 15px; 
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
 
         .container {
-            max-width: 500px;
             width: 100%;
-            background: white;
-            padding: 15px;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-width: 800px; /* Plus large pour les grands écrans */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        img {
-            width: 100%;
+        #photo-display {
+            width: 100%;         /* Utilise toute la largeur du téléphone */
+            max-height: 70vh;    /* Ne dépasse pas 70% de la hauteur de l'écran */
+            object-fit: contain;  /* Affiche l'image entière sans la déformer ou la couper */
             border-radius: 15px;
-            display: block;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             margin-bottom: 20px;
-            /* Animation d'apparition douce */
-            animation: fadeIn 0.5s ease-in;
+            background-color: #2a2a2a; /* Fond de secours pendant le chargement */
+            
+            /* Animation d'apparition */
+            animation: fadeIn 0.4s ease-in;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
+            from { opacity: 0; transform: scale(0.98); }
             to { opacity: 1; transform: scale(1); }
         }
 
@@ -48,15 +57,16 @@
             background-color: #ff4757;
             color: white;
             border: none;
-            padding: 15px 30px;
-            font-size: 1.1rem;
+            padding: 18px 35px;
+            font-size: 1.2rem;
             border-radius: 50px;
             cursor: pointer;
             transition: transform 0.2s;
             font-weight: bold;
+            box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
         }
 
-        button:active { transform: scale(0.95); }
+        button:active { transform: scale(0.90); }
     </style>
 </head>
 <body>
@@ -66,16 +76,15 @@
         
         <img id="photo-display" src="" alt="Chargement...">
 
-        <br>
         <button onclick="afficherPhotoAleatoire()">Encore une ! 🎲</button>
     </div>
 
     <script>
-        // --- CONFIGURATION : METS TES LIENS ICI ---
+        // --- CONFIGURATION : J'ai corrigé le .JPG pour la photo 1 ---
         const mesPhotos = [
-            "1.jpg",
+            "1.jpg", 
             "2.jpg"
-            // Ajoute autant de lignes que tu veux !
+            // Ajoute les autres ici, ex: "3.jpg", "vacances.png"
         ];
 
         function afficherPhotoAleatoire() {
@@ -84,14 +93,13 @@
             // On choisit un index au hasard
             const indexAleatoire = Math.floor(Math.random() * mesPhotos.length);
             
-            // On met à jour la source de l'image
+            // On change la source
             imgElement.src = mesPhotos[indexAleatoire];
         }
 
-        // On lance une première photo au chargement de la page
+        // Première photo au chargement
         window.onload = afficherPhotoAleatoire;
     </script>
 
 </body>
-
 </html>
