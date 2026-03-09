@@ -11,7 +11,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            /* Changement ici : aligne le contenu au début (en haut) */
+            justify-content: flex-start; 
             min-height: 100vh;
             margin: 0;
             padding: 10px;
@@ -30,29 +31,31 @@
         h1 { 
             color: #ff4757; 
             font-size: 1.6rem; 
+            /* On supprime la marge du haut du titre */
+            margin-top: 5px; 
             margin-bottom: 5px; 
             font-weight: bold;
         }
 
-        /* Ta modification ici : plus petit et discret */
         h2 {
             color: #aaaaaa;
             font-size: 0.85rem;
             font-style: italic;
             font-weight: 300;
-            margin-top: -5px;
-            margin-bottom: 30px;
+            margin-top: 0;
+            margin-bottom: 20px;
             opacity: 0.8;
         }
 
         .photo-wrapper {
             width: 100%;
-            height: 65vh;
+            /* On ajuste la hauteur pour que tout tienne bien sans scroller */
+            height: 68vh;
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         #photo-display {
@@ -68,8 +71,8 @@
             border: 5px solid #333;
             border-top: 5px solid #ff4757;
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             animation: spin 1s linear infinite;
         }
 
@@ -82,17 +85,21 @@
             background-color: #ff4757;
             color: white;
             border: none;
-            padding: 18px 35px;
-            font-size: 1.2rem;
+            padding: 15px 35px;
+            font-size: 1.1rem;
             border-radius: 50px;
             cursor: pointer;
             font-weight: bold;
             box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
+            transition: transform 0.1s;
         }
+
+        button:active { transform: scale(0.95); }
 
         button:disabled {
             background-color: #555;
             cursor: not-allowed;
+            box-shadow: none;
         }
     </style>
 </head>
@@ -107,7 +114,7 @@
             <img id="photo-display" src="" alt="Photo">
         </div>
 
-        <button id="btn-next" onclick="afficherPhotoAleatoire()">Encore une !</button>
+        <button id="btn-next" onclick="afficherPhotoAleatoire()">Encore une ! 🎲</button>
     </div>
 
     <script>
