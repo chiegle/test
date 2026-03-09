@@ -5,107 +5,198 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>La Roulette des Photos</title>
     <style>
-        /* Design festif et optimisé pour mobile */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #1a1a1a; /* Fond sombre pour faire ressortir les photos */
+            background-color: #1a1a1a;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start; 
             min-height: 100vh;
             margin: 0;
-            padding: 10px; /* Moins de padding pour gagner de la place */
+            padding: 10px;
             text-align: center;
             color: white;
         }
 
-        h1 { 
-            color: #ff4757; 
-            font-size: 1.4rem; 
-            margin-bottom: 15px; 
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-        }
-
         .container {
             width: 100%;
-            max-width: 800px; /* Plus large pour les grands écrans */
+            max-width: 800px;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        #photo-display {
-            width: 100%;         /* Utilise toute la largeur du téléphone */
-            max-height: 70vh;    /* Ne dépasse pas 70% de la hauteur de l'écran */
-            object-fit: contain;  /* Affiche l'image entière sans la déformer ou la couper */
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            margin-bottom: 20px;
-            background-color: #2a2a2a; /* Fond de secours pendant le chargement */
-            
-            /* Animation d'apparition */
-            animation: fadeIn 0.4s ease-in;
+        h1 { 
+            color: #ff4757; 
+            font-size: 1.6rem; 
+            margin-top: 5px; 
+            margin-bottom: 5px; 
+            font-weight: bold;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.98); }
-            to { opacity: 1; transform: scale(1); }
+        h2 {
+            color: #aaaaaa;
+            font-size: 0.85rem;
+            font-style: italic;
+            font-weight: 300;
+            margin-top: 0;
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+
+        .photo-wrapper {
+            width: 100%;
+            height: 68vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        #photo-display {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: none;
+        }
+
+        /* --- STYLES DE LA BARRE DE PROGRESSION --- */
+        #progress-container {
+            width: 80%;
+            max-width: 300px;
+            height: 10px;
+            background-color: #333;
+            border-radius: 10px;
+            overflow: hidden;
+            display: none; /* Caché par défaut */
+        }
+
+        #progress-bar {
+            width: 0%;
+            height: 100%;
+            background-color: #ff4757;
+            transition: width 0.2s ease;
+        }
+
+        #progress-text {
+            font-size: 0.8rem;
+            color: #ff4757;
+            margin-top: 10px;
+            display: none;
         }
 
         button {
             background-color: #ff4757;
             color: white;
             border: none;
-            padding: 18px 35px;
-            font-size: 1.2rem;
+            padding: 15px 35px;
+            font-size: 1.1rem;
             border-radius: 50px;
             cursor: pointer;
-            transition: transform 0.2s;
             font-weight: bold;
             box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
+            transition: transform 0.1s;
         }
 
-        button:active { transform: scale(0.90); }
+        button:active { transform: scale(0.95); }
+
+        button:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>📸 C'est moi la mariée 😀</h1>
-        
-        <img id="photo-display" src="" alt="Chargement...">
+        <h1>📸 C'est moi la mariée eeeeeeeeeeeee😀</h1>
+        <h2>C'est moi la plus belle</h2>
 
-        <button onclick="afficherPhotoAleatoire()">Encore une ! 🎲</button>
+        <div class="photo-wrapper">
+            <div id="progress-container">
+                <div id="progress-bar"></div>
+            </div>
+            <div id="progress-text">0%</div>
+
+            <img id="photo-display" src="" alt="Photo">
+        </div>
+
+        <button id="btn-next" onclick="afficherPhotoAleatoire()">Encore une ! 🎲</button>
     </div>
 
     <script>
-        // --- CONFIGURATION ---
-        const nombreDePhotos = 77; // MODIFIE ICI : mets ton nombre total de photos
-        const dossier = "photos/"; // Ton dossier sur GitHub
-        const extension = ".jpg";   // Vérifie bien si c'est .jpg ou .JPG
-        
+        const nombreDePhotos = 77; 
+        const dossier = "photos/"; 
+        const extension = ".jpg";   
         const mesPhotos = [];
 
-        // On remplit la liste de photos/1.jpg à photos/50.jpg
         for (let i = 1; i <= nombreDePhotos; i++) {
             mesPhotos.push(dossier + i + extension);
         }
 
+        const imgElement = document.getElementById('photo-display');
+        const progressContainer = document.getElementById('progress-container');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+        const btn = document.getElementById('btn-next');
+
         function afficherPhotoAleatoire() {
-            const imgElement = document.getElementById('photo-display');
+            // 1. Initialisation de l'affichage
+            imgElement.style.display = 'none';
+            progressContainer.style.display = 'block';
+            progressText.style.display = 'block';
+            progressBar.style.width = '0%';
+            progressText.innerText = '0%';
+            btn.disabled = true;
+
             const indexAleatoire = Math.floor(Math.random() * mesPhotos.length);
-            
-            // On ajoute un petit paramètre "?t=" pour forcer le navigateur à 
-            // recharger l'image si on tombe deux fois sur la même de suite
-            imgElement.src = mesPhotos[indexAleatoire] + "?t=" + new Date().getTime();
+            const url = mesPhotos[indexAleatoire] + "?t=" + new Date().getTime();
+
+            // 2. Création de la requête pour suivre la progression
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.responseType = 'blob'; // On récupère l'image sous forme de données brutes
+
+            xhr.onprogress = function(e) {
+                if (e.lengthComputable) {
+                    const pourcentage = Math.round((e.loaded / e.total) * 100);
+                    progressBar.style.width = pourcentage + '%';
+                    progressText.innerText = pourcentage + '%';
+                }
+            };
+
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    // Création d'un lien local vers les données téléchargées
+                    const blob = xhr.response;
+                    const objectURL = URL.createObjectURL(blob);
+                    
+                    imgElement.src = objectURL;
+                    
+                    // On cache la barre et on montre l'image
+                    progressContainer.style.display = 'none';
+                    progressText.style.display = 'none';
+                    imgElement.style.display = 'block';
+                    btn.disabled = false;
+                }
+            };
+
+            xhr.onerror = function() {
+                alert("Erreur de chargement de l'image. Vérifie ta connexion !");
+                btn.disabled = false;
+            };
+
+            xhr.send();
         }
 
         window.onload = afficherPhotoAleatoire;
     </script>
-
 </body>
 </html>
-
-
 
