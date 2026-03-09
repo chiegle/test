@@ -109,12 +109,11 @@
     </div>
 
     <script>
-        const nombreDePhotos = 76; 
+        const nombreDePhotos = 76; // Total de fichiers
         const dossier = "photos/"; 
         const extension = ".jpg";   
         
         // --- LOGIQUE POKEDEX ---
-        // On récupère la liste des photos déjà vues stockée dans le téléphone
         let vues = JSON.parse(localStorage.getItem('photosVues')) || [];
 
         function updateStats() {
@@ -137,7 +136,8 @@
             progressBar.style.width = '0%';
             btn.disabled = true;
 
-            const numAleatoire = Math.floor(Math.random() * nombreDePhotos) + 1;
+            // --- MODIFICATION ICI : Tirage de 0 à 75 ---
+            const numAleatoire = Math.floor(Math.random() * nombreDePhotos); 
             const url = dossier + numAleatoire + extension + "?t=" + new Date().getTime();
 
             const xhr = new XMLHttpRequest();
@@ -175,7 +175,3 @@
     </script>
 </body>
 </html>
-
-
-
-
