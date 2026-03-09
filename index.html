@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Roulette des Photos</title>
+    <title>Poké-Mariée : Attrapez-les toutes !</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -27,27 +27,24 @@
             align-items: center;
         }
 
-        h1 { 
-            color: #ff4757; 
-            font-size: 1.6rem; 
-            margin-top: 5px; 
-            margin-bottom: 5px; 
-            font-weight: bold;
-        }
+        h1 { color: #ff4757; font-size: 1.5rem; margin-top: 5px; margin-bottom: 2px; }
+        h2 { color: #aaaaaa; font-size: 0.8rem; font-style: italic; margin-bottom: 10px; }
 
-        h2 {
-            color: #aaaaaa;
-            font-size: 0.85rem;
-            font-style: italic;
-            font-weight: 300;
-            margin-top: 0;
-            margin-bottom: 20px;
-            opacity: 0.8;
+        /* Style du Compteur Pokédex */
+        #pokedex-stats {
+            background: #333;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #ffda79;
+            border: 1px solid #ffda79;
+            margin-bottom: 15px;
+            font-weight: bold;
         }
 
         .photo-wrapper {
             width: 100%;
-            height: 68vh;
+            height: 60vh;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -65,138 +62,116 @@
             display: none;
         }
 
-        /* --- STYLES DE LA BARRE DE PROGRESSION --- */
+        /* Jauge de progression */
         #progress-container {
-            width: 80%;
-            max-width: 300px;
-            height: 10px;
-            background-color: #333;
+            width: 70%;
+            height: 8px;
+            background-color: #444;
             border-radius: 10px;
-            overflow: hidden;
-            display: none; /* Caché par défaut */
+            display: none;
         }
-
         #progress-bar {
             width: 0%;
             height: 100%;
             background-color: #ff4757;
-            transition: width 0.2s ease;
-        }
-
-        #progress-text {
-            font-size: 0.8rem;
-            color: #ff4757;
-            margin-top: 10px;
-            display: none;
+            transition: width 0.1s;
         }
 
         button {
             background-color: #ff4757;
             color: white;
             border: none;
-            padding: 15px 35px;
+            padding: 15px 40px;
             font-size: 1.1rem;
             border-radius: 50px;
             cursor: pointer;
             font-weight: bold;
-            box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
-            transition: transform 0.1s;
+            box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4);
         }
 
-        button:active { transform: scale(0.95); }
-
-        button:disabled {
-            background-color: #555;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
+        button:disabled { background-color: #555; opacity: 0.6; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>📸 C'est moi la mariée eeeeeeeeeeeee😀</h1>
-        <h2>C'est moi la plus belle</h2>
+        <h1>📸 Poké-Mariée 😀</h1>
+        <h2>Trouve les 77 photos secrètes !</h2>
+
+        <div id="pokedex-stats">Collection : <span id="count">0</span> / 77</div>
 
         <div class="photo-wrapper">
-            <div id="progress-container">
-                <div id="progress-bar"></div>
-            </div>
-            <div id="progress-text">0%</div>
-
+            <div id="progress-container"><div id="progress-bar"></div></div>
             <img id="photo-display" src="" alt="Photo">
         </div>
 
-        <button id="btn-next" onclick="afficherPhotoAleatoire()">Encore une ! 🎲</button>
+        <button id="btn-next" onclick="afficherPhotoAleatoire()">Lancer la roulette ! 🎲</button>
     </div>
 
     <script>
         const nombreDePhotos = 77; 
         const dossier = "photos/"; 
         const extension = ".jpg";   
-        const mesPhotos = [];
+        
+        // --- LOGIQUE POKEDEX ---
+        // On récupère la liste des photos déjà vues stockée dans le téléphone
+        let vues = JSON.parse(localStorage.getItem('photosVues')) || [];
 
-        for (let i = 1; i <= nombreDePhotos; i++) {
-            mesPhotos.push(dossier + i + extension);
+        function updateStats() {
+            document.getElementById('count').innerText = vues.length;
+            if (vues.length === nombreDePhotos) {
+                document.querySelector('h1').innerText = "🏆 MAÎTRE POKÉ-MARIÉE !";
+                document.getElementById('pokedex-stats').style.borderColor = "#2ecc71";
+                document.getElementById('pokedex-stats').style.color = "#2ecc71";
+            }
         }
 
         const imgElement = document.getElementById('photo-display');
         const progressContainer = document.getElementById('progress-container');
         const progressBar = document.getElementById('progress-bar');
-        const progressText = document.getElementById('progress-text');
         const btn = document.getElementById('btn-next');
 
         function afficherPhotoAleatoire() {
-            // 1. Initialisation de l'affichage
             imgElement.style.display = 'none';
             progressContainer.style.display = 'block';
-            progressText.style.display = 'block';
             progressBar.style.width = '0%';
-            progressText.innerText = '0%';
             btn.disabled = true;
 
-            const indexAleatoire = Math.floor(Math.random() * mesPhotos.length);
-            const url = mesPhotos[indexAleatoire] + "?t=" + new Date().getTime();
+            const numAleatoire = Math.floor(Math.random() * nombreDePhotos) + 1;
+            const url = dossier + numAleatoire + extension + "?t=" + new Date().getTime();
 
-            // 2. Création de la requête pour suivre la progression
             const xhr = new XMLHttpRequest();
             xhr.open('GET', url, true);
-            xhr.responseType = 'blob'; // On récupère l'image sous forme de données brutes
+            xhr.responseType = 'blob';
 
             xhr.onprogress = function(e) {
                 if (e.lengthComputable) {
-                    const pourcentage = Math.round((e.loaded / e.total) * 100);
-                    progressBar.style.width = pourcentage + '%';
-                    progressText.innerText = pourcentage + '%';
+                    progressBar.style.width = (e.loaded / e.total * 100) + '%';
                 }
             };
 
             xhr.onload = function() {
                 if (xhr.status === 200) {
-                    // Création d'un lien local vers les données téléchargées
-                    const blob = xhr.response;
-                    const objectURL = URL.createObjectURL(blob);
-                    
-                    imgElement.src = objectURL;
-                    
-                    // On cache la barre et on montre l'image
+                    imgElement.src = URL.createObjectURL(xhr.response);
                     progressContainer.style.display = 'none';
-                    progressText.style.display = 'none';
                     imgElement.style.display = 'block';
                     btn.disabled = false;
+
+                    // Marquer comme vue si c'est nouveau
+                    if (!vues.includes(numAleatoire)) {
+                        vues.push(numAleatoire);
+                        localStorage.setItem('photosVues', JSON.stringify(vues));
+                        updateStats();
+                    }
                 }
             };
-
-            xhr.onerror = function() {
-                alert("Erreur de chargement de l'image. Vérifie ta connexion !");
-                btn.disabled = false;
-            };
-
             xhr.send();
         }
 
-        window.onload = afficherPhotoAleatoire;
+        window.onload = () => {
+            updateStats();
+            afficherPhotoAleatoire();
+        };
     </script>
 </body>
 </html>
-
