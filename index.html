@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>La Roulette des Photos</title>
     <style>
-        /* Base de la page */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #1a1a1a;
@@ -26,10 +25,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
         }
 
-        /* Titre principal */
         h1 { 
             color: #ff4757; 
             font-size: 1.6rem; 
@@ -37,21 +34,20 @@
             font-weight: bold;
         }
 
-        /* Sous-titre en italique et plus petit */
+        /* Ta modification ici : plus petit et discret */
         h2 {
-            color: #cccccc; /* Gris clair pour contraster */
-            font-size: 1rem;
+            color: #aaaaaa;
+            font-size: 0.85rem;
             font-style: italic;
             font-weight: 300;
-            margin-top: 0;
-            margin-bottom: 25px;
-            opacity: 0.9;
+            margin-top: -5px;
+            margin-bottom: 30px;
+            opacity: 0.8;
         }
 
-        /* Conteneur de l'image et du chargement */
         .photo-wrapper {
             width: 100%;
-            height: 65vh; /* Légèrement réduit pour laisser de la place aux titres */
+            height: 65vh;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -68,7 +64,6 @@
             display: none;
         }
 
-        /* Animation de chargement */
         .loader {
             border: 5px solid #333;
             border-top: 5px solid #ff4757;
@@ -83,7 +78,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Bouton d'action */
         button {
             background-color: #ff4757;
             color: white;
@@ -94,17 +88,11 @@
             cursor: pointer;
             font-weight: bold;
             box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
-            transition: transform 0.1s;
-        }
-
-        button:active {
-            transform: scale(0.95);
         }
 
         button:disabled {
             background-color: #555;
             cursor: not-allowed;
-            box-shadow: none;
         }
     </style>
 </head>
@@ -116,51 +104,13 @@
 
         <div class="photo-wrapper">
             <div id="loader" class="loader"></div>
-            <img id="photo-display" src="" alt="Photo de la mariée">
+            <img id="photo-display" src="" alt="Photo">
         </div>
 
         <button id="btn-next" onclick="afficherPhotoAleatoire()">Encore une ! 🎲</button>
     </div>
 
     <script>
-        // Configuration
         const nombreDePhotos = 77; 
         const dossier = "photos/"; 
-        const extension = ".jpg";   
-        const mesPhotos = [];
-
-        // Génération de la liste des chemins vers les fichiers
-        for (let i = 1; i <= nombreDePhotos; i++) {
-            mesPhotos.push(dossier + i + extension);
-        }
-
-        const imgElement = document.getElementById('photo-display');
-        const loader = document.getElementById('loader');
-        const btn = document.getElementById('btn-next');
-
-        function afficherPhotoAleatoire() {
-            // On cache l'image actuelle et on active le loader
-            imgElement.style.display = 'none';
-            loader.style.display = 'block';
-            btn.disabled = true;
-
-            // Tirage aléatoire
-            const indexAleatoire = Math.floor(Math.random() * mesPhotos.length);
-            
-            // Mise à jour de la source avec un paramètre anti-cache (?t=)
-            imgElement.src = mesPhotos[indexAleatoire] + "?t=" + new Date().getTime();
-        }
-
-        // Action une fois que le fichier image est totalement téléchargé
-        imgElement.onload = function() {
-            loader.style.display = 'none';
-            imgElement.style.display = 'block';
-            btn.disabled = false;
-        };
-
-        // Lancement automatique au chargement de la page
-        window.onload = afficherPhotoAleatoire;
-    </script>
-
-</body>
-</html>
+        const extension = ".jpg";
