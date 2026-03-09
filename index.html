@@ -11,7 +11,6 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            /* Changement ici : aligne le contenu au début (en haut) */
             justify-content: flex-start; 
             min-height: 100vh;
             margin: 0;
@@ -31,7 +30,6 @@
         h1 { 
             color: #ff4757; 
             font-size: 1.6rem; 
-            /* On supprime la marge du haut du titre */
             margin-top: 5px; 
             margin-bottom: 5px; 
             font-weight: bold;
@@ -49,9 +47,9 @@
 
         .photo-wrapper {
             width: 100%;
-            /* On ajuste la hauteur pour que tout tienne bien sans scroller */
             height: 68vh;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             position: relative;
@@ -67,18 +65,29 @@
             display: none;
         }
 
-        .loader {
-            border: 5px solid #333;
-            border-top: 5px solid #ff4757;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
+        /* --- STYLES DE LA BARRE DE PROGRESSION --- */
+        #progress-container {
+            width: 80%;
+            max-width: 300px;
+            height: 10px;
+            background-color: #333;
+            border-radius: 10px;
+            overflow: hidden;
+            display: none; /* Caché par défaut */
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        #progress-bar {
+            width: 0%;
+            height: 100%;
+            background-color: #ff4757;
+            transition: width 0.2s ease;
+        }
+
+        #progress-text {
+            font-size: 0.8rem;
+            color: #ff4757;
+            margin-top: 10px;
+            display: none;
         }
 
         button {
@@ -110,7 +119,11 @@
         <h2>C'est moi la plus belle</h2>
 
         <div class="photo-wrapper">
-            <div id="loader" class="loader"></div>
+            <div id="progress-container">
+                <div id="progress-bar"></div>
+            </div>
+            <div id="progress-text">0%</div>
+
             <img id="photo-display" src="" alt="Photo">
         </div>
 
@@ -128,22 +141,59 @@
         }
 
         const imgElement = document.getElementById('photo-display');
-        const loader = document.getElementById('loader');
+        const progressContainer = document.getElementById('progress-container');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
         const btn = document.getElementById('btn-next');
 
         function afficherPhotoAleatoire() {
+            // 1. Initialisation de l'affichage
             imgElement.style.display = 'none';
-            loader.style.display = 'block';
+            progressContainer.style.display = 'block';
+            progressText.style.display = 'block';
+            progressBar.style.width = '0%';
+            progressText.innerText = '0%';
             btn.disabled = true;
-            const indexAleatoire = Math.floor(Math.random() * mesPhotos.length);
-            imgElement.src = mesPhotos[indexAleatoire] + "?t=" + new Date().getTime();
-        }
 
-        imgElement.onload = function() {
-            loader.style.display = 'none';
-            imgElement.style.display = 'block';
-            btn.disabled = false;
-        };
+            const indexAleatoire = Math.floor(Math.random() * mesPhotos.length);
+            const url = mesPhotos[indexAleatoire] + "?t=" + new Date().getTime();
+
+            // 2. Création de la requête pour suivre la progression
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.responseType = 'blob'; // On récupère l'image sous forme de données brutes
+
+            xhr.onprogress = function(e) {
+                if (e.lengthComputable) {
+                    const pourcentage = Math.round((e.loaded / e.total) * 100);
+                    progressBar.style.width = pourcentage + '%';
+                    progressText.innerText = pourcentage + '%';
+                }
+            };
+
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    // Création d'un lien local vers les données téléchargées
+                    const blob = xhr.response;
+                    const objectURL = URL.createObjectURL(blob);
+                    
+                    imgElement.src = objectURL;
+                    
+                    // On cache la barre et on montre l'image
+                    progressContainer.style.display = 'none';
+                    progressText.style.display = 'none';
+                    imgElement.style.display = 'block';
+                    btn.disabled = false;
+                }
+            };
+
+            xhr.onerror = function() {
+                alert("Erreur de chargement de l'image. Vérifie ta connexion !");
+                btn.disabled = false;
+            };
+
+            xhr.send();
+        }
 
         window.onload = afficherPhotoAleatoire;
     </script>
