@@ -107,10 +107,38 @@
             <img id="photo-display" src="" alt="Photo">
         </div>
 
-        <button id="btn-next" onclick="afficherPhotoAleatoire()">Encore une ! 🎲</button>
+        <button id="btn-next" onclick="afficherPhotoAleatoire()">Encore une !</button>
     </div>
 
     <script>
         const nombreDePhotos = 77; 
         const dossier = "photos/"; 
-        const extension = ".jpg";
+        const extension = ".jpg";   
+        const mesPhotos = [];
+
+        for (let i = 1; i <= nombreDePhotos; i++) {
+            mesPhotos.push(dossier + i + extension);
+        }
+
+        const imgElement = document.getElementById('photo-display');
+        const loader = document.getElementById('loader');
+        const btn = document.getElementById('btn-next');
+
+        function afficherPhotoAleatoire() {
+            imgElement.style.display = 'none';
+            loader.style.display = 'block';
+            btn.disabled = true;
+            const indexAleatoire = Math.floor(Math.random() * mesPhotos.length);
+            imgElement.src = mesPhotos[indexAleatoire] + "?t=" + new Date().getTime();
+        }
+
+        imgElement.onload = function() {
+            loader.style.display = 'none';
+            imgElement.style.display = 'block';
+            btn.disabled = false;
+        };
+
+        window.onload = afficherPhotoAleatoire;
+    </script>
+</body>
+</html>
