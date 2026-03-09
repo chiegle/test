@@ -22,13 +22,21 @@
         .container {
             width: 100%;
             max-width: 800px;
-            position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: flex-start; /* Aligne tout vers le haut */
         }
 
         h1 { color: #ff4757; font-size: 1.4rem; margin-bottom: 15px; }
+        h2 {
+    color: #ffffff; /* On le met en blanc pour qu'il ressorte */
+    font-size: 1.1rem;
+    font-weight: 300;
+    margin-top: -10px; /* Pour le rapprocher un peu du h1 */
+    margin-bottom: 20px;
+    opacity: 0.8; /* Un peu plus discret que le h1 */
+}
 
         /* Conteneur de l'image pour superposer le chargement */
         .photo-wrapper {
@@ -137,4 +145,5 @@
 
 </body>
 </html>
+
 
